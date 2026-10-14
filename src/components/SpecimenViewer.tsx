@@ -3,9 +3,35 @@ import { ContactShadows, Grid, OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Box3, Group, Mesh, MeshStandardMaterial, SRGBColorSpace, TextureLoader, Vector3, type Texture } from 'three';
+import { Box3, Group, Mesh, MeshStandardMaterial, SRGBColorSpace, Texture, TextureLoader, Vector3, type Material } from 'three';
 import type { DinosaurProfile } from '../types/dinosaur';
 import { ViewerControls, type ViewAngle } from './ViewerControls';
+
+function disposeMaterials(object: Group) {
+  const materials = new Set<Material>();
+  const textures = new Set<Texture>();
+  object.traverse((child) => {
+    if (!(child instanceof Mesh)) return;
+    const meshMaterials = Array.isArray(child.material) ? child.material : [child.material];
+    meshMaterials.forEach((material) => materials.add(material));
+  });
+  materials.forEach((material) => {
+    Object.values(material).forEach((value) => {
+      if (value instanceof Texture) textures.add(value);
+    });
+    material.dispose();
+  });
+  textures.forEach((texture) => texture.dispose());
+}
+
+function disposeScene(object: Group) {
+  const geometries = new Set<Mesh['geometry']>();
+  object.traverse((child) => {
+    if (child instanceof Mesh) geometries.add(child.geometry);
+  });
+  disposeMaterials(object);
+  geometries.forEach((geometry) => geometry.dispose());
+}
 
 function SpecimenModel({ profile, onReady, onError }: { profile: DinosaurProfile; onReady: () => void; onError: () => void }) {
   const [model, setModel] = useState<Group | null>(null);
@@ -15,21 +41,33 @@ function SpecimenModel({ profile, onReady, onError }: { profile: DinosaurProfile
     let loadedTextures: Texture[] = [];
     const loader = new FBXLoader();
     loader.load(profile.model.fbx, async (object) => {
+      if (!alive) {
+        disposeScene(object);
+        return;
+      }
+      loadedModel = object;
       try {
         const textureLoader = new TextureLoader();
-        const [color, normal, roughness, metallic] = await Promise.all([
+        const textureResults = await Promise.allSettled([
           textureLoader.loadAsync(profile.model.baseColor),
           textureLoader.loadAsync(profile.model.normal),
           textureLoader.loadAsync(profile.model.roughness),
           textureLoader.loadAsync(profile.model.metallic),
         ]);
-        loadedTextures = [color, normal, roughness, metallic];
+        loadedTextures = textureResults.flatMap((result) => result.status === 'fulfilled' ? [result.value] : []);
+        if (loadedTextures.length !== 4) {
+          loadedTextures.forEach((texture) => texture.dispose());
+          loadedTextures = [];
+          throw new Error('Specimen texture set is incomplete.');
+        }
+        const [color, normal, roughness, metallic] = loadedTextures as [Texture, Texture, Texture, Texture];
         if (!alive) {
           loadedTextures.forEach((texture) => texture.dispose());
           return;
         }
         color.colorSpace = SRGBColorSpace;
         [color, normal, roughness, metallic].forEach((texture) => { texture.anisotropy = 8; });
+        disposeMaterials(object);
         object.traverse((child) => {
           if (!(child instanceof Mesh)) return;
           child.castShadow = true;
@@ -55,16 +93,8 @@ function SpecimenModel({ profile, onReady, onError }: { profile: DinosaurProfile
     }, undefined, () => { if (alive) onError(); });
     return () => {
       alive = false;
-      if (loadedModel) {
-        loadedModel.traverse((child) => {
-          if (child instanceof Mesh) {
-            child.geometry.dispose();
-            const materials = Array.isArray(child.material) ? child.material : [child.material];
-            materials.forEach((material) => material.dispose());
-          }
-        });
-      }
-      loadedTextures.forEach((texture) => texture.dispose());
+      if (loadedModel) disposeScene(loadedModel);
+      else loadedTextures.forEach((texture) => texture.dispose());
     };
   }, [profile, onError, onReady]);
 

@@ -1,8 +1,10 @@
 import { ArrowDown, ArrowRight, ArrowUpRight, Orbit, ScanLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { tyrannosaurus } from '../data/tyrannosaurus';
 
 export function HomePage() {
+  useEffect(() => { document.title = 'PALEOVERSE — Earth, before us.'; }, []);
   return (
     <div className="home-page">
       <section className="home-hero page-wrap">

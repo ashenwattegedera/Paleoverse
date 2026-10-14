@@ -10,3 +10,4 @@
 - Document asset provenance limitations, architecture, scientific sourcing and extension path.
 - Exclude the unverified supplied model binaries from Git while retaining their local Vite loading path.
 - Add registry and archive component tests.
+- Generate archive filters from registered taxa and support alphabetical A–Z/Z–A sorting.

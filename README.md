@@ -5,7 +5,7 @@ An interactive prehistoric field archive. The current release is focused on one 
 ## Current experience
 
 - Editorial landing page with deep-time context and a Mesozoic timeline.
-- Data-backed archive index with name/group search and diet/period filters.
+- Data-backed archive index with name/group search, registry-generated diet/period/group filters and alphabetical sorting.
 - Reusable, citation-linked T. rex profile with anatomy notes, fossil-range illustration, proportional scale comparison and evidence-confidence labels.
 - Three.js viewer loading the supplied FBX mesh and four PBR texture maps. Drag to orbit, scroll to zoom, reset and use side/front views, switch the reference grid, and view fullscreen.
 - Responsive layouts, keyboard-visible focus, descriptive labels, reduced-motion support, and graceful missing-WebGL/model messages.

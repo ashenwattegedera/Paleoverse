@@ -7,15 +7,21 @@ export function getDinosaurBySlug(slug: string): DinosaurProfile | undefined {
   return dinosaurs.find((dinosaur) => dinosaur.slug === slug);
 }
 
-export function searchDinosaurs(query: string, diet = 'all', period = 'all', group = 'all'): DinosaurProfile[] {
+export function sortDinosaurs(records: DinosaurProfile[], direction: 'asc' | 'desc' = 'asc'): DinosaurProfile[] {
+  const multiplier = direction === 'asc' ? 1 : -1;
+  return [...records].sort((left, right) => left.commonName.localeCompare(right.commonName) * multiplier);
+}
+
+export function searchDinosaurs(query: string, diet = 'all', period = 'all', group = 'all', direction: 'asc' | 'desc' = 'asc'): DinosaurProfile[] {
   const normalizedQuery = query.trim().toLocaleLowerCase();
-  return dinosaurs.filter((dinosaur) => {
+  const matches = dinosaurs.filter((dinosaur) => {
     const searchable = `${dinosaur.commonName} ${dinosaur.scientificName} ${dinosaur.group}`.toLocaleLowerCase();
     return searchable.includes(normalizedQuery)
       && (diet === 'all' || dinosaur.diet.toLocaleLowerCase() === diet.toLocaleLowerCase())
       && (period === 'all' || dinosaur.period.toLocaleLowerCase() === period.toLocaleLowerCase())
       && (group === 'all' || dinosaur.group.toLocaleLowerCase() === group.toLocaleLowerCase());
   });
+  return sortDinosaurs(matches, direction);
 }
 
 export function validateDinosaurRegistry(records: DinosaurProfile[] = dinosaurs): string[] {

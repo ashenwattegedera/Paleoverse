@@ -18,7 +18,10 @@ describe('archive page', () => {
     expect(screen.getByText('NO MATCHING SPECIMENS')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'CLEAR FILTERS' }));
     expect(screen.getByRole('heading', { name: /tyrannosaurus rex/i })).toBeInTheDocument();
-    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by diet' }), { target: { value: 'herbivore' } });
-    expect(screen.getByText('NO MATCHING SPECIMENS')).toBeInTheDocument();
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by diet' }), { target: { value: 'carnivore' } });
+    expect(screen.getByRole('heading', { name: /tyrannosaurus rex/i })).toBeInTheDocument();
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by dinosaur group' }), { target: { value: 'theropoda' } });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Sort specimens alphabetically' }), { target: { value: 'desc' } });
+    expect(screen.getByRole('heading', { name: /tyrannosaurus rex/i })).toBeInTheDocument();
   });
 });
