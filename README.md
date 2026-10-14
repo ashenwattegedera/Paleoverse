@@ -87,3 +87,10 @@ Project source code is MIT licensed. The locally supplied 3D model and textures 
 - Add the independently sourced Triceratops record and its quadrupedal model/gait configuration.
 - Add browser-driven desktop/mobile and WebGL fallback coverage, then profile performance on mobile hardware.
 - Expand the atlas with sourced anatomy inspection and fossil collections data.
+
+## Known limitations
+
+- The supplied FBX has no usable rig or walk clip, and asset rights/creator/scale are unverified. It is excluded from commits; provide rights-cleared local assets to load it.
+- The lazily loaded viewer chunk is approximately 991 kB minified (267 kB gzip), which triggers Vite's 500 kB chunk advisory. It is isolated to the specimen experience, but further dependency splitting/optimization is still worthwhile.
+- Automated checks cover registry logic, archive interactions, profile content and viewer controls. Playwright/browser rendering, visual gait review, accessibility audit and measured mobile-GPU performance have not been performed.
+- Google Fonts are loaded from the Google Fonts stylesheet; system fallbacks are defined for offline use.
