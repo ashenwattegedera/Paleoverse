@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.DS_Store
+*.local
+.env*
+coverage/
+*.tsbuildinfo
+models/trex_highpoly/SM_trex_highpoly.fbx
+models/trex_highpoly/trex_basecolor.png
+models/trex_highpoly/trex_normal.png
+models/trex_highpoly/trex_roughness.png
+models/trex_highpoly/trex_metallic.png
