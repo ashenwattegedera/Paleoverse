@@ -16,6 +16,10 @@ describe('deep time explorer', () => {
       'href',
       '/specimens/tyrannosaurus-rex',
     );
+    expect(screen.getByRole('link', { name: 'Triceratops' })).toHaveAttribute(
+      'href',
+      '/specimens/triceratops',
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Jurassic' }));
     expect(screen.getByRole('button', { name: 'Jurassic' })).toHaveAttribute(
       'aria-pressed',

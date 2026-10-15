@@ -1,6 +1,6 @@
 # Phase 2 PR metadata
 
-Status: prepared for manual review; no phase 2 PR has been opened or merged.
+Status: merged in [PR #2](https://github.com/ashenwattegedera/Paleoverse/pull/2), merge commit `b6a7ce0`. The metadata below is retained as the phase handoff record.
 
 ## PR title
 

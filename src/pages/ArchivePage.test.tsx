@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it } from 'vitest';
+import { dinosaurs } from '../data/registry';
 import { ArchivePage } from './ArchivePage';
 
 afterEach(cleanup);
@@ -23,7 +24,7 @@ describe('archive page', () => {
       </MemoryRouter>,
     );
     fireEvent.change(screen.getByRole('textbox', { name: 'Search specimens' }), {
-      target: { value: 'triceratops' },
+      target: { value: 'no matching record' },
     });
     expect(screen.getByText('NO MATCHING SPECIMENS')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'CLEAR FILTERS' }));
@@ -79,7 +80,60 @@ describe('archive links', () => {
     expect(screen.getByRole('status')).toHaveTextContent('0 records matching your selection');
     fireEvent.click(screen.getByRole('button', { name: 'CLEAR FILTERS' }));
     expect(screen.getByRole('textbox', { name: 'Search specimens' })).toHaveValue('');
-    expect(screen.getByRole('status')).toHaveTextContent('1 record ready to explore');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      `${dinosaurs.length} records ready to explore`,
+    );
     expect(screen.getByRole('textbox', { name: 'Search specimens' })).toHaveFocus();
+  });
+});
+
+describe('two-taxon collection', () => {
+  it('separates herbivore/ceratopsian filters from the theropod record', () => {
+    render(
+      <MemoryRouter>
+        <ArchivePage />
+      </MemoryRouter>,
+    );
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by diet' }), {
+      target: { value: 'herbivore' },
+    });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by dinosaur group' }), {
+      target: { value: 'ceratopsia' },
+    });
+    expect(screen.getByRole('heading', { name: 'Triceratops' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Tyrannosaurus rex' })).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('1 record matching your selection');
+  });
+  it('sorts the real records in both directions and clears an incompatible filter combination', () => {
+    render(
+      <MemoryRouter>
+        <ArchivePage />
+      </MemoryRouter>,
+    );
+    expect(
+      screen
+        .getAllByRole('heading', { level: 2 })
+        .slice(0, 2)
+        .map((heading) => heading.textContent),
+    ).toEqual(['Triceratops', 'Tyrannosaurus rex']);
+    fireEvent.change(screen.getByRole('combobox', { name: 'Sort specimens alphabetically' }), {
+      target: { value: 'desc' },
+    });
+    expect(
+      screen
+        .getAllByRole('heading', { level: 2 })
+        .slice(0, 2)
+        .map((heading) => heading.textContent),
+    ).toEqual(['Tyrannosaurus rex', 'Triceratops']);
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by diet' }), {
+      target: { value: 'herbivore' },
+    });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter by dinosaur group' }), {
+      target: { value: 'theropoda' },
+    });
+    expect(screen.getByText('NO MATCHING SPECIMENS')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'CLEAR FILTERS' }));
+    expect(screen.getByRole('heading', { name: 'Triceratops' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Tyrannosaurus rex' })).toBeInTheDocument();
   });
 });

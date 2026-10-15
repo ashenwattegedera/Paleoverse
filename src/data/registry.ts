@@ -1,7 +1,8 @@
+import { triceratops } from './triceratops';
 import { tyrannosaurus } from './tyrannosaurus';
 import type { DinosaurProfile } from '../types/dinosaur';
 
-export const dinosaurs: DinosaurProfile[] = [tyrannosaurus];
+export const dinosaurs: DinosaurProfile[] = [tyrannosaurus, triceratops];
 
 export function getDinosaurBySlug(slug: string): DinosaurProfile | undefined {
   return dinosaurs.find((dinosaur) => dinosaur.slug === slug);
@@ -36,6 +37,36 @@ export function searchDinosaurs(
     );
   });
   return sortDinosaurs(matches, direction);
+}
+
+export interface RelatedDinosaur {
+  dinosaur: DinosaurProfile;
+  sharedAttributes: ('group' | 'period')[];
+}
+
+/** Shared catalog attributes explain each suggestion; they do not imply direct interaction. */
+export function getRelatedDinosaurs(
+  profile: DinosaurProfile,
+  records: DinosaurProfile[] = dinosaurs,
+): RelatedDinosaur[] {
+  return records
+    .filter((record) => record.id !== profile.id && record.slug !== profile.slug)
+    .map((record) => ({
+      dinosaur: record,
+      sharedAttributes: (['group', 'period'] as const).filter(
+        (key) => record[key] === profile[key],
+      ),
+    }))
+    .filter((related) => related.sharedAttributes.length > 0)
+    .sort((left, right) => {
+      const score = (related: RelatedDinosaur) =>
+        related.sharedAttributes.reduce((sum, key) => sum + (key === 'group' ? 2 : 1), 0);
+      return (
+        score(right) - score(left) ||
+        left.dinosaur.commonName.localeCompare(right.dinosaur.commonName)
+      );
+    })
+    .slice(0, 3);
 }
 
 /** Validate authored records before publication; no network requests are made here. */
@@ -89,7 +120,13 @@ export function validateDinosaurRegistry(records: DinosaurProfile[] = dinosaurs)
           errors.push(`${record.id} ${context} refers to missing source ${sourceId}`);
       }
     };
-    const sectionIds = new Set(['geological-context', 'evidence', 'sources']);
+    const sectionIds = new Set([
+      'geological-context',
+      'evidence',
+      'sources',
+      'related-records',
+      'related-records-heading',
+    ]);
     for (const section of record.sections) {
       if (sectionIds.has(section.id))
         errors.push(`${record.id} has duplicate or reserved section id ${section.id}`);

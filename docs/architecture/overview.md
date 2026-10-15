@@ -35,15 +35,16 @@ The registry validates identity, duplicate IDs/slugs/archive codes, finite order
 - `useArchiveFilters` / `lib/archiveFilters`: URL-backed controls and pure parsing/serialization. Search replaces history; category/sort changes push history. Unsupported values fall back to defaults; unrelated parameters are preserved.
 - `DeepTimeExplorer`: native age slider and period buttons, filtering published catalog records by the selected age. Its empty state describes catalog coverage.
 - `RecordArtwork`: compact optional image/fallback shared by home and collection.
+- `RelatedRecords` / `getRelatedDinosaurs`: available catalog suggestions with shared-attribute reasons, deterministic ranking, self/no-match exclusion and a three-result cap.
 
 The timeline presents an approximate interval, not precise fossil-site chronology. The comparison uses straight bars and explicitly compares body length with reference human height. The range is written content; no generic regional map is reused for unrelated taxa. Section navigation derives from existing sections.
 
 ## Public assets and legacy 3D
 
-Vite uses `public/`. Only reviewed publication assets belong there. The generated T. rex WebP is 1536×1024 and approximately 121 kB. The local `models/` directory is no longer Vite's public directory, so its unverified binaries are not copied to production.
+Vite uses `public/`. Only reviewed publication assets belong there. The generated T. rex and Triceratops WebPs are 1536×1024 and approximately 121 kB and 167 kB respectively. The local `models/` directory is no longer Vite's public directory, so its unverified binaries are not copied to production.
 
 `SpecimenViewer.tsx` and `ViewerControls.tsx` remain as dormant legacy components. The viewer now accepts its model explicitly rather than requiring a model on every dinosaur profile. No active route imports it, so Three.js and the legacy FBX loader are absent from production chunks. Retaining dependencies is a deliberate reversible migration choice; future integration requires rights-cleared assets and separate viewer verification.
 
 ## Extension and rollout
 
-Phase 2 implements the editorial home/collection, shared motion, URL filters, navigation context and an adjustable illustrative comparison reference. It is awaiting manual review. A second sourced record belongs to phase 3. See `docs/design/archive-expansion-plan.md`, `docs/design/motion-system.md` and `docs/development/phase-2-review.md`. Avoid copying a page or introducing taxon-name branches when expanding content.
+Phase 2 is merged. Phase 3 adds a separately sourced Triceratops genus record, generic single-word heading support and related-record discovery. Both records use the same template, with optional measurements/media and independent source sets. Phase 3 is awaiting manual review. See `docs/design/archive-expansion-plan.md`, `docs/design/motion-system.md` and `docs/development/phase-3-review.md`. Avoid copying a page or introducing taxon-name branches when expanding content.

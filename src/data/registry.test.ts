@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   dinosaurs,
   getDinosaurBySlug,
+  getRelatedDinosaurs,
   searchDinosaurs,
   sortDinosaurs,
   validateDinosaurRegistry,
@@ -10,6 +11,7 @@ import {
 describe('dinosaur registry', () => {
   it('resolves the specimen detail route from the registry', () => {
     expect(getDinosaurBySlug('tyrannosaurus-rex')?.commonName).toBe('Tyrannosaurus rex');
+    expect(getDinosaurBySlug('triceratops')?.scientificName).toBe('Triceratops');
     expect(getDinosaurBySlug('not-a-specimen')).toBeUndefined();
   });
 
@@ -17,14 +19,16 @@ describe('dinosaur registry', () => {
     expect(searchDinosaurs('Tyrannosaurus')).toHaveLength(1);
     expect(searchDinosaurs('rex')[0]?.id).toBe('pvr-001');
     expect(searchDinosaurs('theropoda')[0]?.id).toBe('pvr-001');
-    expect(searchDinosaurs('triceratops')).toHaveLength(0);
+    expect(searchDinosaurs('triceratops')[0]?.id).toBe('pvr-002');
   });
 
   it('applies diet and period filters without mutating the registry', () => {
     expect(searchDinosaurs('', 'carnivore', 'late cretaceous')).toHaveLength(1);
     expect(searchDinosaurs('', 'all', 'all', 'theropoda')).toHaveLength(1);
-    expect(searchDinosaurs('', 'herbivore')).toHaveLength(0);
-    expect(dinosaurs).toHaveLength(1);
+    expect(searchDinosaurs('', 'herbivore').map((record) => record.id)).toContain('pvr-002');
+    expect(dinosaurs.map((record) => record.id)).toEqual(
+      expect.arrayContaining(['pvr-001', 'pvr-002']),
+    );
   });
 
   it('validates source relationships and oldest-to-youngest age bounds', () => {
@@ -128,5 +132,52 @@ describe('publication validation', () => {
     expect(errors).toContain(`${rex.id} illustration needs descriptive and provenance metadata`);
     expect(errors).toContain(`${rex.id} illustration must use a local /illustrations/ image path`);
     expect(errors).toContain(`${rex.id} illustration needs positive integer dimensions`);
+  });
+});
+
+describe('related dinosaur discovery', () => {
+  it('explains the shared period for the two published taxa without linking a record to itself', () => {
+    const rex = getDinosaurBySlug('tyrannosaurus-rex')!;
+    expect(getRelatedDinosaurs(rex)).toContainEqual({
+      dinosaur: getDinosaurBySlug('triceratops'),
+      sharedAttributes: ['period'],
+    });
+    expect(getRelatedDinosaurs(rex).some(({ dinosaur }) => dinosaur.id === rex.id)).toBe(false);
+    expect(getRelatedDinosaurs(rex, [rex])).toEqual([]);
+  });
+  it('ranks shared group before shared period and breaks ties alphabetically without changing input', () => {
+    const rex = getDinosaurBySlug('tyrannosaurus-rex')!;
+    const onlyPeriod = {
+      ...rex,
+      id: 'period',
+      slug: 'period',
+      commonName: 'A period match',
+      group: 'Other',
+    };
+    const onlyGroup = {
+      ...rex,
+      id: 'group',
+      slug: 'group',
+      commonName: 'Group match',
+      period: 'Other',
+    };
+    const bothZ = { ...rex, id: 'both-z', slug: 'both-z', commonName: 'Z match' };
+    const bothA = { ...rex, id: 'both-a', slug: 'both-a', commonName: 'A match' };
+    const unrelated = {
+      ...rex,
+      id: 'unrelated',
+      slug: 'unrelated',
+      group: 'Other',
+      period: 'Other',
+    };
+    const input = [onlyPeriod, bothZ, unrelated, onlyGroup, bothA, rex];
+    const original = [...input];
+    expect(getRelatedDinosaurs(rex, input).map(({ dinosaur }) => dinosaur.id)).toEqual([
+      'both-a',
+      'both-z',
+      'group',
+    ]);
+    expect(input).toEqual(original);
+    expect(getRelatedDinosaurs(rex, [unrelated])).toEqual([]);
   });
 });

@@ -1,6 +1,6 @@
 # Phase 2: editorial layouts and purposeful motion
 
-Status: implemented and committed locally; awaiting the user's manual review before PR creation and merge.
+Status: reviewed and merged in [PR #2](https://github.com/ashenwattegedera/Paleoverse/pull/2), merge commit `b6a7ce0`.
 
 - Branch: `codex/phase-2-editorial-motion`.
 - Base: `3c476a8`, the merge of [phase 1 PR #1](https://github.com/ashenwattegedera/Paleoverse/pull/1).
@@ -55,3 +55,5 @@ These are local Chrome checks, not a full screen-reader audit, multi-browser com
 ## Delivery checkpoint
 
 Do not create or merge the phase 2 PR until the user has run and reviewed this phase. Apply feedback in focused commits and rerun affected checks. After approval, push this branch, create the PR using the prepared metadata, attach it to the chat, merge with preserved logical commits where repository settings allow, then begin phase 3.
+
+The phase 2 checkpoint is complete. Phase 3 starts from its verified merge; see `phase-3-review.md` for the current checkpoint.
