@@ -1,0 +1,488 @@
+/* The specimen prototype introduces the field-journal direction without changing other routes. */
+.journal-record {
+  --paper: #f5efdf;
+  --ink: #393b31;
+  --ink-muted: #66695c;
+  --motion-fast: 160ms;
+  --motion-enter: 650ms;
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.journal-record .specimen-title-row {
+  gap: 24px;
+}
+.journal-record .specimen-title-row h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.065em;
+}
+.journal-record .specimen-ident {
+  transform: rotate(2deg);
+  border-color: var(--amber);
+  max-width: 225px;
+}
+.journal-record .specimen-ident i {
+  line-height: 1.6;
+}
+.specimen-plate {
+  margin: 30px 0 0;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid #b9ae96;
+}
+.plate-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 26px;
+  border-bottom: 1px solid #cfc6b2;
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+.plate-body {
+  position: relative;
+  padding: 18px 40px 8px;
+  overflow: hidden;
+}
+.plate-margin {
+  position: absolute;
+  top: 28px;
+  left: 25px;
+  z-index: 1;
+  display: flex;
+  gap: 18px;
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.plate-illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 620px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  animation: plate-arrive var(--motion-enter) var(--ease-editorial) both;
+}
+.plate-signature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 0 15px;
+  font:
+    italic 25px Georgia,
+    serif;
+}
+.plate-caption {
+  border-top: 1px solid #cfc6b2;
+  padding: 18px 26px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 32px;
+  align-items: start;
+}
+.plate-caption > span {
+  font: 9px/1.7 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.plate-caption p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 12px;
+  line-height: 1.65;
+  max-width: 70ch;
+}
+.plate-placeholder {
+  position: relative;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 55px 35px;
+  isolation: isolate;
+}
+.plate-placeholder-index {
+  position: absolute;
+  z-index: -1;
+  right: 5%;
+  font:
+    250px/0.8 Georgia,
+    serif;
+  color: #d9d0bc;
+}
+.plate-placeholder > span:not(.plate-placeholder-index) {
+  font: 10px var(--mono);
+  letter-spacing: 0.12em;
+}
+.plate-placeholder p {
+  font:
+    italic clamp(34px, 6vw, 76px)/1.1 Georgia,
+    serif;
+  max-width: 80%;
+  margin: 25px 0;
+}
+.plate-placeholder small {
+  max-width: 320px;
+  color: var(--ink-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.journal-record .measurement-strip {
+  margin-top: 0;
+  grid-template-columns: 1.1fr repeat(var(--measurement-count), 1fr);
+}
+.journal-record .measurement-note {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  min-height: 46px;
+}
+.journal-record .measurement .inline-citations {
+  margin-top: 14px;
+  font-size: 8px;
+}
+.journal-record .record-nav {
+  flex-wrap: wrap;
+  line-height: 1.8;
+}
+.journal-record .timeline-panel {
+  margin: 0;
+  min-width: 0;
+}
+.journal-record .timeline-track {
+  margin-top: 26px;
+}
+.journal-record .timeline-progress {
+  min-width: 2px;
+}
+.journal-record .timeline-axis {
+  display: flex;
+  justify-content: space-between;
+}
+.journal-record .timeline-current {
+  line-height: 1.7;
+}
+.journal-record h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+.journal-note {
+  display: grid;
+  grid-template-columns: 0.55fr 1fr;
+  gap: 60px;
+  padding: 65px 0;
+  border-top: 1px solid var(--line);
+}
+.journal-note-index {
+  display: flex;
+  gap: 22px;
+  align-items: baseline;
+}
+.journal-note-index > span {
+  font:
+    italic 60px/1 Georgia,
+    serif;
+  color: var(--amber);
+}
+.journal-note-index small {
+  font: 9px/1.7 var(--mono);
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  max-width: 145px;
+}
+.journal-note-body {
+  max-width: 690px;
+}
+.journal-note-body h2 {
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1.1;
+  margin: 0 0 25px;
+}
+.journal-note-body p {
+  font-size: 15px;
+  line-height: 1.9;
+  color: #b8bdb2;
+}
+.journal-record .inline-citations a {
+  display: inline-block;
+  padding: 7px 4px;
+}
+.journal-record .anatomy-detail p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.journal-record .anatomy-detail .inline-citations {
+  margin-top: 0;
+}
+.journal-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  padding: 70px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.journal-range h2 {
+  font-size: clamp(45px, 5vw, 70px);
+  line-height: 1;
+  margin: 30px 0 0;
+}
+.journal-range > div:last-child {
+  border-left: 1px solid var(--line);
+  padding-left: 40px;
+}
+.journal-range svg {
+  color: var(--amber);
+}
+.journal-range h3 {
+  font:
+    28px/1.2 Georgia,
+    serif;
+  margin: 18px 0;
+}
+.journal-range p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.journal-range .range-location {
+  display: block;
+  margin: 20px 0;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+.journal-record .scale-dino,
+.journal-record .scale-human {
+  clip-path: none;
+  border-radius: 0;
+}
+.record-provenance {
+  padding: 45px 0;
+  border-top: 1px solid var(--line);
+}
+.record-provenance h2 {
+  font-size: 38px;
+  margin: 24px 0;
+}
+.record-provenance > p {
+  max-width: 740px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.record-provenance dl {
+  max-width: 850px;
+  margin-top: 28px;
+}
+.record-provenance dl > div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 25px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line-soft);
+}
+.record-provenance dt {
+  font: 9px/1.8 var(--mono);
+  color: var(--amber);
+}
+.record-provenance dd {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+@keyframes plate-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 760px) {
+  .journal-record .specimen-title-row {
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 35px;
+  }
+  .journal-record .specimen-title-row h1 {
+    font-size: clamp(52px, 13.5vw, 91px);
+  }
+  .journal-record .specimen-ident {
+    flex-direction: row;
+    transform: none;
+    margin: 0;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    font-size: 8px;
+  }
+  .journal-record .specimen-ident b {
+    font-size: 16px;
+  }
+  .journal-record .specimen-ident small,
+  .journal-record .specimen-ident i {
+    font-size: 7px;
+  }
+  .journal-record .specimen-lead p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .plate-heading {
+    padding: 13px;
+    font-size: 7px;
+    line-height: 1.6;
+  }
+  .plate-heading > span:first-child {
+    max-width: 160px;
+  }
+  .plate-heading > span:last-child {
+    text-align: right;
+  }
+  .plate-body {
+    padding: 38px 8px 0;
+  }
+  .plate-margin {
+    top: 14px;
+    left: 13px;
+    font-size: 7px;
+    gap: 12px;
+  }
+  .plate-signature {
+    font-size: 20px;
+    margin: 5px 7px 14px;
+  }
+  .plate-caption {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+  .plate-caption p {
+    font-size: 12px;
+  }
+  .plate-placeholder {
+    min-height: 300px;
+    padding: 30px 12px;
+  }
+  .plate-placeholder-index {
+    font-size: 150px;
+  }
+  .plate-placeholder p {
+    font-size: 36px;
+    max-width: 100%;
+  }
+  .journal-record .measurement-strip {
+    grid-template-columns: repeat(var(--measurement-count), minmax(0, 1fr));
+  }
+  .journal-record .measurement-intro {
+    gap: 20px;
+  }
+  .journal-record .measurement strong {
+    font-size: 23px;
+  }
+  .journal-record .measurement small {
+    font-size: 8px;
+  }
+  .journal-record .measurement .inline-citations {
+    font-size: 7px;
+  }
+  .journal-record .measurement-note {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .journal-record .record-nav {
+    gap: 10px 18px;
+    font-size: 8px;
+  }
+  .journal-record .timeline-panel-head {
+    font-size: 9px;
+  }
+  .journal-record .timeline-panel-head small {
+    font-size: 7px;
+  }
+  .journal-record .period-blocks {
+    font-size: 8px;
+  }
+  .journal-record .period-blocks b,
+  .journal-record .timeline-axis {
+    font-size: 8px;
+  }
+  .journal-note {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 38px 0;
+  }
+  .journal-note-index {
+    gap: 17px;
+  }
+  .journal-note-index > span {
+    font-size: 35px;
+  }
+  .journal-note-index small {
+    max-width: none;
+    font-size: 9px;
+  }
+  .journal-note-body p {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+  .journal-record .anatomy-detail {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+  .journal-record .anatomy-detail p {
+    font-size: 12px;
+  }
+  .journal-record .anatomy-row .evidence-badge {
+    font-size: 7px;
+  }
+  .journal-range {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 50px 0;
+  }
+  .journal-range > div:last-child {
+    padding-left: 18px;
+  }
+  .journal-record .evidence-card p,
+  .journal-record .sources-header p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .journal-record .source-row h3 {
+    font-size: 13px;
+  }
+  .journal-record .source-row p {
+    font-size: 11px;
+  }
+  .record-provenance h2 {
+    font-size: 32px;
+  }
+  .record-provenance dl > div {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journal-record *,
+  .journal-record *::before,
+  .journal-record *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
