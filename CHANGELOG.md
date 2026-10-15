@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased — phase 2 / 2026-10-15
+## Unreleased — phase 3 / 2026-10-15
+
+- Add a separately sourced genus-level Triceratops profile and generated illustration with provenance.
+- Reuse the shared detail page with a single-word heading and optional measurements.
+- Add related-record discovery with explicit shared attributes and deterministic ranking.
+- Exercise the two-record collection, filters, sorting, timeline and source navigation.
+- Record scientific source-access limits, artwork review and the phase 3 manual/PR checkpoint.
+
+## Phase 2 — merged in PR #2 / 2026-10-15
 
 - Extend the illustrated field-journal identity to home, collection and shared navigation.
 - Drive featured content, counts and links from the registry; retain optional artwork fallbacks.

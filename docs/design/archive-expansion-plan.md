@@ -1,6 +1,6 @@
 # Illustration-first archive expansion plan
 
-Status: rollout authorized, 2026-10-15. Phase 1 is merged in PR #1. Phase 2 is implemented and awaiting manual review; phases 3–4 have not started. See `../development/phase-2-review.md` for the current checkpoint.
+Status: rollout authorized, 2026-10-15. Phases 1–2 are merged in PRs #1–2. Phase 3 is implemented and awaiting manual review; phase 4 has not started. See `../development/phase-3-review.md` for the current checkpoint.
 
 ## Objective
 

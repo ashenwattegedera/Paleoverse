@@ -1,6 +1,6 @@
 # PALEOVERSE
 
-An illustrated prehistoric field archive. The current catalog contains one sourced record: _Tyrannosaurus rex_ (PVR—001). Scientific content can be published without a 3D model or illustration.
+An illustrated prehistoric field archive. The current catalog contains two sourced records: _Tyrannosaurus rex_ (PVR—001) and the genus _Triceratops_ (PVR—002). Scientific content can be published without a 3D model or illustration.
 
 ## Current experience
 
@@ -13,8 +13,9 @@ An illustrated prehistoric field archive. The current catalog contains one sourc
 - Shared CSS motion tokens, section/result entrances, card feedback and reduced-motion support.
 - Sticky responsive navigation, skip link, heading/hash focus and session reading-position restoration.
 - Adjustable illustrative human scale reference; recorded dinosaur estimates remain unchanged.
+- Related-record links with explicit shared group/period reasons, without implying a direct encounter.
 
-Phase 1 is merged. Phase 2 extends the field-journal design and motion across the application and is awaiting manual review; a separately sourced second dinosaur follows in phase 3. See [the rollout plan](docs/design/archive-expansion-plan.md).
+Phases 1–2 are merged. Phase 3 adds a separately sourced Triceratops record and related-record discovery and is awaiting manual review. Phase 4 is the final quality/delivery pass. See [the rollout plan](docs/design/archive-expansion-plan.md).
 
 ## Stack and setup
 
@@ -27,7 +28,7 @@ npm install
 npm run dev
 ```
 
-Open the URL printed by Vite to explore the home, `/archive`, and `/specimens/tyrannosaurus-rex`. No model files or WebGL support are required. Production hosting must rewrite client routes to `index.html`.
+Open the URL printed by Vite to explore the home, `/archive`, `/specimens/tyrannosaurus-rex`, and `/specimens/triceratops`. No model files or WebGL support are required. Production hosting must rewrite client routes to `index.html`.
 
 ## Checks
 
@@ -39,7 +40,7 @@ npm run build
 npm run preview
 ```
 
-Tests cover registry validation, URL filter state, archive interactions, route focus, timeline/scale controls, navigation, specimen content, image failures and legacy viewer controls. See [phase 2 review notes](docs/development/phase-2-review.md) for browser observations and the manual review checklist. This is not a claim of a full accessibility or scientific illustration audit.
+Tests cover registry validation, URL filter state, archive interactions, route focus, timeline/scale controls, navigation, specimen content, image failures and legacy viewer controls. See [phase 3 review notes](docs/development/phase-3-review.md) for browser observations and the manual review checklist. This is not a claim of a full accessibility or scientific illustration audit.
 
 ## Project structure
 
@@ -64,13 +65,13 @@ Vite uses its standard `public/` directory. `models/` is retained locally and ex
 
 Measurements and scientific notes connect to source IDs in the record. Estimates and debated reconstructions are explicit. Artwork dimensions are separate from scientific measurements; the scale comparison uses numeric record data, not illustration pixels.
 
-The T. rex plate is AI-generated interpretive artwork, not a fossil photograph, verified anatomical diagram or direct evidence for coloration. Its generation prompt and review limits are recorded in [illustration provenance](docs/assets/illustration-prompts.md). Records with no illustration remain complete written records.
+The T. rex and Triceratops plates are AI-generated interpretive artwork, not a fossil photograph, verified anatomical diagram or direct evidence for coloration. Their generation prompts and review limits are recorded in [illustration provenance](docs/assets/illustration-prompts.md). Records with no illustration remain complete written records.
 
 ## Documentation
 
 - [Architecture](docs/architecture/overview.md)
 - [Motion system](docs/design/motion-system.md)
-- [Phase 2 PR metadata](docs/development/phase-2-pr.md)
+- [Phase 3 PR metadata](docs/development/phase-3-pr.md)
 - [Adding a dinosaur](docs/development/adding-a-dinosaur.md)
 - [Asset manifest](docs/assets/manifest.md)
 - [Scientific source policy](docs/content/scientific-sources.md)
