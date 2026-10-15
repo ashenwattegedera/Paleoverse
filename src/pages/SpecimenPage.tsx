@@ -5,6 +5,7 @@ import { getDinosaurBySlug } from '../data/registry';
 import { GeologicalTimeline } from '../components/GeologicalTimeline';
 import { MeasurementStrip } from '../components/MeasurementStrip';
 import { SourceLinks } from '../components/SourceLinks';
+import { RelatedRecords } from '../components/RelatedRecords';
 import { Reveal } from '../components/Reveal';
 import { SpecimenPlate } from '../components/SpecimenPlate';
 import '../styles/specimen.css';
@@ -59,8 +60,12 @@ export function SpecimenPage() {
             {dinosaur.group.toUpperCase()}
           </div>
           <h1>
-            {scientificNameParts.slice(0, -1).join(' ')}
-            <br />
+            {scientificNameParts.length > 1 && (
+              <>
+                {scientificNameParts.slice(0, -1).join(' ')}
+                <br />
+              </>
+            )}
             <i>{scientificNameParts.at(-1)}.</i>
           </h1>
           <p className="specimen-pronunciation">
@@ -365,6 +370,7 @@ export function SpecimenPage() {
           </p>
         )}
       </section>
+      <RelatedRecords profile={dinosaur} />
       <div className="specimen-next">
         <span>END OF RECORD / {dinosaur.archiveNumber}</span>
         <Link to="/archive">

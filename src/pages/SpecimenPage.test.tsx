@@ -109,3 +109,27 @@ describe('specimen record', () => {
     );
   });
 });
+
+describe('Triceratops field record', () => {
+  it('uses the shared template with a genus name, its own estimates and source-linked content', () => {
+    renderSpecimen('/specimens/triceratops');
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(heading).toHaveTextContent('Triceratops.');
+    expect(heading.querySelector('br')).toBeNull();
+    expect(screen.getByLabelText('Triceratops estimated measurements')).toHaveTextContent('≈ 9');
+    expect(screen.getByLabelText('Triceratops estimated measurements')).toHaveTextContent('≈ 10');
+    expect(screen.queryByText('HIP HEIGHT')).not.toBeInTheDocument();
+    expect(screen.queryByText('5–7')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Supported on four limbs' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'A skull that changed with age' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('END OF RECORD / PVR—002')).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Follow another thread.' })).toHaveTextContent(
+      'Same period: Late Cretaceous',
+    );
+    for (const link of document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) {
+      expect(document.getElementById(link.hash.slice(1))).not.toBeNull();
+    }
+  });
+});
