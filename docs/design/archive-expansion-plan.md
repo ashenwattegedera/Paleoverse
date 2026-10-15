@@ -1,6 +1,6 @@
 # Illustration-first archive expansion plan
 
-Status: rollout authorized, 2026-10-15. Phase 1 is implemented and awaiting manual review. Later phases have not started. See `../development/phase-1-review.md` for the checkpoint.
+Status: rollout authorized, 2026-10-15. Phase 1 is merged in PR #1. Phase 2 is implemented and awaiting manual review; phases 3–4 have not started. See `../development/phase-2-review.md` for the current checkpoint.
 
 ## Objective
 
@@ -50,16 +50,16 @@ Suggest other available records using transparent shared attributes such as peri
 
 Use a shared set of duration, easing, distance, and stagger tokens. Candidate timings: 120–180 ms for controls, 250–400 ms for small transitions, and 500–750 ms for major entrances. These are starting points to tune in the browser.
 
-| Moment | Proposed motion | Purpose |
-| --- | --- | --- |
-| Initial page view | Brief title/metadata stagger and illustration reveal | Establish reading hierarchy |
-| Entering a section | Small once-only fade/translation | Pace the narrative |
-| Geological timeline | User-controlled marker with changing date/context | Explain relative time |
-| Archive filtering | Short result transition with persistent focus and announced count | Clarify what changed |
-| Card interaction | Subtle artwork movement and underline/arrow response | Indicate a link |
-| Anatomy note selection | Highlight a verified region and display its cited note | Connect a label to anatomy |
-| Scale comparison | User-triggered transition between reference subjects | Explain proportions |
-| Route navigation | Short content transition without delaying links | Maintain continuity |
+| Moment                 | Proposed motion                                                   | Purpose                     |
+| ---------------------- | ----------------------------------------------------------------- | --------------------------- |
+| Initial page view      | Brief title/metadata stagger and illustration reveal              | Establish reading hierarchy |
+| Entering a section     | Small once-only fade/translation                                  | Pace the narrative          |
+| Geological timeline    | User-controlled marker with changing date/context                 | Explain relative time       |
+| Archive filtering      | Short result transition with persistent focus and announced count | Clarify what changed        |
+| Card interaction       | Subtle artwork movement and underline/arrow response              | Indicate a link             |
+| Anatomy note selection | Highlight a verified region and display its cited note            | Connect a label to anatomy  |
+| Scale comparison       | User-triggered transition between reference subjects              | Explain proportions         |
+| Route navigation       | Short content transition without delaying links                   | Maintain continuity         |
 
 No scroll hijacking, forced horizontal scrolling, loading theatrics, cursor trails, or required animation before content becomes available. Avoid endless ambient motion. Use transform/opacity for decorative movement; preserve stable layout and image dimensions. Use native scrolling and progressive enhancement.
 

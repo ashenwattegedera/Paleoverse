@@ -1,6 +1,6 @@
 # Phase 1: illustrated record foundation
 
-Status: implemented locally; awaiting the user's manual review before PR creation or merge. Branch: `codex/phase-1-illustrated-records`. Baseline: `4a5f6c9` (original local `main`).
+Status: reviewed and merged in [PR #1](https://github.com/ashenwattegedera/Paleoverse/pull/1), merge commit `3c476a8`. Branch: `codex/phase-1-illustrated-records`. Baseline: `4a5f6c9` (original local `main`).
 
 ## Delivered
 
@@ -60,4 +60,4 @@ The user supplied `git@github.com:ashenwattegedera/Paleoverse.git`; authenticati
 4. Preserve the phase's logical commits with a merge commit where repository settings allow; verify the merged state.
 5. Start phase 2 only after the phase 1 checkpoint is complete.
 
-No PR or merge has been performed before the requested manual review.
+The phase 1 checkpoint is complete. The phase 2 branch starts from the verified merge; see `phase-2-review.md` for the next manual checkpoint.

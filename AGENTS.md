@@ -33,3 +33,5 @@
 - The user has authorized logical commits, GitHub PR creation, and merges for this redesign, with a manual review checkpoint after every phase.
 - Complete and verify one phase, commit its coherent changes, then pause for the user to run and inspect it. Create its PR and merge only after the user approves that phase. Preserve commit traceability through the PR and a merge commit where repository settings allow.
 - The configured remote is `git@github.com:ashenwattegedera/Paleoverse.git`. Do not create a replacement repository or publish through Sites hosting.
+
+- At each phase checkpoint, provide a ready-to-use PR title, full description, branch/base details and actual logical commit messages. Prepare these in the review documentation; opening the phase PR still waits for manual review.

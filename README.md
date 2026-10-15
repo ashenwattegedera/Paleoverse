@@ -1,17 +1,20 @@
 # PALEOVERSE
 
-An illustrated prehistoric field archive. The current catalog contains one sourced record: *Tyrannosaurus rex* (PVR—001). Scientific content can be published without a 3D model or illustration.
+An illustrated prehistoric field archive. The current catalog contains one sourced record: _Tyrannosaurus rex_ (PVR—001). Scientific content can be published without a 3D model or illustration.
 
 ## Current experience
 
-- Editorial landing page with deep-time context and a Mesozoic timeline.
-- Registry-backed archive with name/group search, diet/period/group filters and alphabetical sorting.
+- Editorial home with an illustrated plate, collection ledger and source-linked field dispatch.
+- Interactive geological notebook with keyboard-operated age selection and matching published records.
+- Registry-backed collection with shareable URL search, diet/period/group filters and alphabetical sorting.
 - Illustration-first specimen prototype: warm paper plate, editorial typography, cited field notes, anatomy, geological context, range and schematic scale comparison.
 - Optional artwork with explicit provenance, reconstruction notes and a designed missing/broken-image fallback.
 - Data-driven measurements and geography; unavailable measurements and empty detail sections are omitted.
-- Keyboard-visible focus, narrow-screen layouts and reduced-motion support.
+- Shared CSS motion tokens, section/result entrances, card feedback and reduced-motion support.
+- Sticky responsive navigation, skip link, heading/hash focus and session reading-position restoration.
+- Adjustable illustrative human scale reference; recorded dinosaur estimates remain unchanged.
 
-Phase 1 is the foundation and specimen prototype. The home/archive redesign and expanded motion system are planned for phase 2; a separately sourced second dinosaur follows in phase 3. See [the rollout plan](docs/design/archive-expansion-plan.md).
+Phase 1 is merged. Phase 2 extends the field-journal design and motion across the application and is awaiting manual review; a separately sourced second dinosaur follows in phase 3. See [the rollout plan](docs/design/archive-expansion-plan.md).
 
 ## Stack and setup
 
@@ -24,7 +27,7 @@ npm install
 npm run dev
 ```
 
-Open the URL printed by Vite, then `/specimens/tyrannosaurus-rex` for the phase 1 prototype. No model files or WebGL support are required. Production hosting must rewrite client routes to `index.html`.
+Open the URL printed by Vite to explore the home, `/archive`, and `/specimens/tyrannosaurus-rex`. No model files or WebGL support are required. Production hosting must rewrite client routes to `index.html`.
 
 ## Checks
 
@@ -36,16 +39,18 @@ npm run build
 npm run preview
 ```
 
-Tests cover registry validation, archive interactions, reusable specimen content, image failures, geological display ranges and legacy viewer controls. See [phase 1 review notes](docs/development/phase-1-review.md) for browser observations and the manual review checklist. This is not a claim of a full accessibility or scientific illustration audit.
+Tests cover registry validation, URL filter state, archive interactions, route focus, timeline/scale controls, navigation, specimen content, image failures and legacy viewer controls. See [phase 2 review notes](docs/development/phase-2-review.md) for browser observations and the manual review checklist. This is not a claim of a full accessibility or scientific illustration audit.
 
 ## Project structure
 
 ```text
 src/
-  components/     specimen plate, measurements, timeline, citations, shared shell
+  components/     plates/artwork, timeline, reveal, route frame, citations, shell
   data/           typed content, citations, registry and validation
+  hooks/          URL-backed collection state
+  lib/            pure filter serialization
   pages/          home, archive, reusable specimen route
-  styles/         shared design tokens and specimen prototype styles
+  styles/         base styles, editorial/motion tokens and specimen styles
   types/          domain and optional media contracts
 public/
   illustrations/  optimized published artwork
@@ -64,6 +69,8 @@ The T. rex plate is AI-generated interpretive artwork, not a fossil photograph, 
 ## Documentation
 
 - [Architecture](docs/architecture/overview.md)
+- [Motion system](docs/design/motion-system.md)
+- [Phase 2 PR metadata](docs/development/phase-2-pr.md)
 - [Adding a dinosaur](docs/development/adding-a-dinosaur.md)
 - [Asset manifest](docs/assets/manifest.md)
 - [Scientific source policy](docs/content/scientific-sources.md)
