@@ -16,7 +16,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
-This license applies to the project source code only. It does not apply to the
-contents of models/ or public/models/, including the supplied FBX and texture
-files. Their creator, origin and license are unverified; no reuse permission is
-granted for those media assets by this file.
+This license applies to the project source code only. It does not apply to
+raster illustrations in public/illustrations/ or model media in models/ or
+public/models/. Consult docs/assets/manifest.md and per-record provenance for
+media information. The supplied legacy FBX and textures have unverified creator,
+origin and license; this file grants no reuse permission for those assets.

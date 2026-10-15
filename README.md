@@ -1,96 +1,76 @@
 # PALEOVERSE
 
-An interactive prehistoric field archive. The current release is focused on one sourced specimen record: *Tyrannosaurus rex* (PVR—001). PALEOVERSE blends geological time, editorial storytelling and an interactive 3D specimen display while making scientific uncertainty and asset provenance visible.
+An illustrated prehistoric field archive. The current catalog contains one sourced record: *Tyrannosaurus rex* (PVR—001). Scientific content can be published without a 3D model or illustration.
 
 ## Current experience
 
 - Editorial landing page with deep-time context and a Mesozoic timeline.
-- Data-backed archive index with name/group search, registry-generated diet/period/group filters and alphabetical sorting.
-- Reusable, citation-linked T. rex profile with anatomy notes, fossil-range illustration, proportional scale comparison and evidence-confidence labels.
-- Three.js viewer loading the supplied FBX mesh and four PBR texture maps. Drag to orbit, scroll to zoom, reset and use side/front views, switch the reference grid, and view fullscreen.
-- Responsive layouts, keyboard-visible focus, descriptive labels, reduced-motion support, and graceful missing-WebGL/model messages.
-- Strict TypeScript, registry validation, unit/component tests and production build.
+- Registry-backed archive with name/group search, diet/period/group filters and alphabetical sorting.
+- Illustration-first specimen prototype: warm paper plate, editorial typography, cited field notes, anatomy, geological context, range and schematic scale comparison.
+- Optional artwork with explicit provenance, reconstruction notes and a designed missing/broken-image fallback.
+- Data-driven measurements and geography; unavailable measurements and empty detail sections are omitted.
+- Keyboard-visible focus, narrow-screen layouts and reduced-motion support.
 
-## Scientific and model status
+Phase 1 is the foundation and specimen prototype. The home/archive redesign and expanded motion system are planned for phase 2; a separately sourced second dinosaur follows in phase 3. See [the rollout plan](docs/design/archive-expansion-plan.md).
 
-The page represents T. rex as a Late Cretaceous North American theropod, uses approximate adult measurement ranges, and avoids claiming a definitive maximum speed. Claims link to the Natural History Museum and relevant biomechanical literature. Current interpretations are evidence informed and can change.
+## Stack and setup
 
-The supplied model files are expected under `models/trex_highpoly/` and Vite serves that directory directly; binaries are not duplicated. They are locally available in the development workspace but excluded from Git until their origin and rights are verified. On a fresh checkout, provide licensed copies at those paths to enable the 3D scene; without them, the archive and written profile remain usable and the viewer reports its load failure. The delivered FBX is a static mesh: inspection found no animation/deformation tracks, and no rig metadata was provided. It therefore **does not walk**; the viewer truthfully offers specimen inspection, not a simulated gait. See [asset manifest](docs/assets/manifest.md).
+React 19, strict TypeScript, Vite, React Router, Lucide icons, custom CSS, Vitest and React Testing Library. No backend, account system or remote content API is required. Legacy Three.js viewer code/dependencies remain available for an explicitly selected future integration but are not imported by the application or included in its production chunks.
 
-## Stack
-
-- React 19 + TypeScript (strict) + Vite
-- Three.js, React Three Fiber, Drei and FBXLoader
-- React Router, Lucide icons
-- Vitest, jsdom and React Testing Library
-- CSS design tokens and custom responsive styles
-
-## Requirements and setup
-
-- Node.js 20.19+ or 22.12+ (Vite 8 runtime requirement)
-- npm 10+
-- Modern browser with WebGL 2 recommended for 3D; the text record remains available without it
+Use Node.js 20.19+ or 22.12+ and npm 10+:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Vite prints the local development URL. The 3D scene downloads the FBX and texture maps (about 33 MB total from the supplied model directory), so allow a brief first-load period.
+Open the URL printed by Vite, then `/specimens/tyrannosaurus-rex` for the phase 1 prototype. No model files or WebGL support are required. Production hosting must rewrite client routes to `index.html`.
 
-## Commands
+## Checks
 
 ```sh
-npm run typecheck  # strict TypeScript
-npm run lint       # ESLint
-npm test           # Vitest
-npm run build      # typecheck + production bundle
-npm run preview    # serve production output locally
+npm run typecheck
+npm run lint
+npm test
+npm run build
+npm run preview
 ```
 
-## Structure
+Tests cover registry validation, archive interactions, reusable specimen content, image failures, geological display ranges and legacy viewer controls. See [phase 1 review notes](docs/development/phase-1-review.md) for browser observations and the manual review checklist. This is not a claim of a full accessibility or scientific illustration audit.
+
+## Project structure
 
 ```text
 src/
-  components/        shared shell and Three.js specimen viewer
-  data/              typed T. rex content, citations, registry and validation
-  pages/              home, archive and reusable specimen route
-  styles/             design tokens, layouts, motion and breakpoints
-  types/               domain contracts
-docs/
-  architecture/     application boundaries and data flow
-  animation/        rig contract and current asset limitations
-  assets/           provenance and rights manifest
-  development/      add-a-dinosaur workflow
-models/              supplied source files, served directly by Vite
+  components/     specimen plate, measurements, timeline, citations, shared shell
+  data/           typed content, citations, registry and validation
+  pages/          home, archive, reusable specimen route
+  styles/         shared design tokens and specimen prototype styles
+  types/          domain and optional media contracts
+public/
+  illustrations/  optimized published artwork
+models/           legacy local assets; not served or copied into builds
+docs/             architecture, content, assets, design and development guides
 ```
 
-The one-record catalog and route read from the same typed registry. Add a new record and its cited content rather than hard-coding another card/page; instructions are in [`docs/development/adding-a-dinosaur.md`](docs/development/adding-a-dinosaur.md).
+Vite uses its standard `public/` directory. `models/` is retained locally and excluded from public output. The previous unverified FBX and textures are not a publishing requirement.
+
+## Content and media
+
+Measurements and scientific notes connect to source IDs in the record. Estimates and debated reconstructions are explicit. Artwork dimensions are separate from scientific measurements; the scale comparison uses numeric record data, not illustration pixels.
+
+The T. rex plate is AI-generated interpretive artwork, not a fossil photograph, verified anatomical diagram or direct evidence for coloration. Its generation prompt and review limits are recorded in [illustration provenance](docs/assets/illustration-prompts.md). Records with no illustration remain complete written records.
 
 ## Documentation
 
 - [Architecture](docs/architecture/overview.md)
-- [Animation and viewer pipeline](docs/animation/viewer-and-rigging.md)
 - [Adding a dinosaur](docs/development/adding-a-dinosaur.md)
 - [Asset manifest](docs/assets/manifest.md)
 - [Scientific source policy](docs/content/scientific-sources.md)
+- [Legacy viewer and future rigging](docs/animation/viewer-and-rigging.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 
 ## License
 
-Project source code is MIT licensed. The locally supplied 3D model and textures are explicitly excluded pending verification of their origin and license. See [LICENSE](LICENSE) and the asset manifest before reuse or publication.
-
-## Next steps
-
-- Replace the unverified static asset with a rights-cleared, rigged GLB and review a slow grounded T. rex walk cycle visually.
-- Add the independently sourced Triceratops record and its quadrupedal model/gait configuration.
-- Add browser-driven desktop/mobile and WebGL fallback coverage, then profile performance on mobile hardware.
-- Expand the atlas with sourced anatomy inspection and fossil collections data.
-
-## Known limitations
-
-- The supplied FBX has no usable rig or walk clip, and asset rights/creator/scale are unverified. It is excluded from commits; provide rights-cleared local assets to load it.
-- The lazily loaded viewer chunk is approximately 991 kB minified (267 kB gzip), which triggers Vite's 500 kB chunk advisory. It is isolated to the specimen experience, but further dependency splitting/optimization is still worthwhile.
-- Automated checks cover registry logic, archive interactions, profile content and viewer controls. Playwright/browser rendering, visual gait review, accessibility audit and measured mobile-GPU performance have not been performed.
-- Google Fonts are loaded from the Google Fonts stylesheet; system fallbacks are defined for offline use.
+Project source code is MIT licensed. Raster artwork and model media are excluded from that code license; consult the asset manifest and per-record provenance. Original model files have unverified creator/source/rights and are not distributed by the application.
