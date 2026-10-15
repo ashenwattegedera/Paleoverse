@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ArrowRight, ArrowUpRight, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { dinosaurs, searchDinosaurs } from '../data/registry';
@@ -7,6 +7,7 @@ import { RecordArtwork } from '../components/RecordArtwork';
 import { Reveal } from '../components/Reveal';
 
 export function ArchivePage() {
+  const searchInput = useRef<HTMLInputElement>(null);
   const { filters, updateFilters, clearFilters } = useArchiveFilters();
   const { query, diet, period, group, sort } = filters;
   useEffect(() => {
@@ -59,6 +60,7 @@ export function ArchivePage() {
           <Search size={20} strokeWidth={1.5} aria-hidden="true" />
           <span className="sr-only">Search specimens</span>
           <input
+            ref={searchInput}
             value={query}
             onChange={(event) => updateFilters({ query: event.target.value }, true)}
             placeholder="A name, a group, a curiosity…"
@@ -105,7 +107,13 @@ export function ArchivePage() {
           {filtered ? 'matching your selection' : 'ready to explore'}
         </p>
         {filtered && (
-          <button className="clear-selection" onClick={clearFilters}>
+          <button
+            className="clear-selection"
+            onClick={() => {
+              clearFilters();
+              searchInput.current?.focus();
+            }}
+          >
             CLEAR FILTERS <span aria-hidden="true">×</span>
           </button>
         )}

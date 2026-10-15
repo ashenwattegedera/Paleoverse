@@ -80,5 +80,6 @@ describe('archive links', () => {
     fireEvent.click(screen.getByRole('button', { name: 'CLEAR FILTERS' }));
     expect(screen.getByRole('textbox', { name: 'Search specimens' })).toHaveValue('');
     expect(screen.getByRole('status')).toHaveTextContent('1 record ready to explore');
+    expect(screen.getByRole('textbox', { name: 'Search specimens' })).toHaveFocus();
   });
 });
