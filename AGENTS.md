@@ -26,4 +26,10 @@
 ## Current direction
 
 - The user wants an expandable, illustration-first dinosaur archive with optional 3D, expressive purposeful animation, and an authored editorial appearance.
-- `docs/design/archive-expansion-plan.md` records the proposed rollout. It is a planning document; its detailed visual and implementation choices remain proposals until selected for implementation.
+- `docs/design/archive-expansion-plan.md` records the proposed rollout. The user authorized the rollout with a manual review checkpoint for every phase; do not advance past a checkpoint without their review.
+
+## Authorized phased delivery
+
+- The user has authorized logical commits, GitHub PR creation, and merges for this redesign, with a manual review checkpoint after every phase.
+- Complete and verify one phase, commit its coherent changes, then pause for the user to run and inspect it. Create its PR and merge only after the user approves that phase. Preserve commit traceability through the PR and a merge commit where repository settings allow.
+- The configured remote is `git@github.com:ashenwattegedera/Paleoverse.git`. Do not create a replacement repository or publish through Sites hosting.

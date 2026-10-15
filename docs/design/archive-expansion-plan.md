@@ -1,6 +1,6 @@
 # Illustration-first archive expansion plan
 
-Status: proposal, 2026-10-15. No application redesign has been implemented.
+Status: rollout authorized, 2026-10-15. Phase 1 is implemented and awaiting manual review. Later phases have not started. See `../development/phase-1-review.md` for the checkpoint.
 
 ## Objective
 

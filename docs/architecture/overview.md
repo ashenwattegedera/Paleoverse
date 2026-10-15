@@ -1,48 +1,43 @@
 # Application architecture
 
-## Shape of the app
-
-PALEOVERSE is a small, static React application. It has no server, user account, remote content API or global store. React Router selects one of three experiences and the specimen route reads a typed domain record from a single registry.
+PALEOVERSE is a static React application with no backend, accounts, remote content API or global state store. React Router selects three lazily loaded routes:
 
 ```text
-Browser URL
-   │
-   ├── /                HomePage (editorial gateway, eras)
-   ├── /archive         ArchivePage ─── searchDinosaurs() ─── registry
-   └── /specimens/:slug SpecimenPage ── getDinosaurBySlug() ── DinosaurProfile
-                                             │
-                                             ├── cited field notes, anatomy, timeline
-                                             └── SpecimenViewer ── FBXLoader + texture maps
+/                 HomePage
+/archive          ArchivePage -> searchDinosaurs() -> registry
+/specimens/:slug  SpecimenPage -> getDinosaurBySlug() -> DinosaurProfile
+                                 |-- SpecimenPlate (optional image / text fallback)
+                                 |-- MeasurementStrip + SourceLinks
+                                 |-- GeologicalTimeline
+                                 |-- cited notes, anatomy, range, evidence, provenance
 ```
 
-Route components are lazy-loaded so the Three.js viewer is not required on the landing page or archive. The viewer loads one FBX instance and its PBR maps when the specimen route mounts. Its R3F canvas and OrbitControls own render-time state; small local React state controls grid visibility, camera presets and error/loading states. There is no Zustand store because no shared mutable state currently warrants one.
+## Content contracts
 
-## Feature boundaries
+`src/types/dinosaur.ts` defines the profile, references, measurements and optional media. A `Measurement` separates a displayed estimate, unit, optional representative numeric value, and source IDs. A missing estimate is omitted. Numeric values drive schematic comparisons; image dimensions never imply physical scale.
 
-- `src/types/dinosaur.ts`: profile, source and evidence contracts.
-- `src/data/tyrannosaurus.ts`: content and local model manifest, independent of UI components.
-- `src/data/registry.ts`: collection lookup, search/filter and relationship validation.
-- `src/pages`: routed editorial, archive and reusable detail template.
-- `src/components/SiteShell.tsx`: responsive shared navigation/footer.
-- `src/components/SpecimenViewer.tsx`: FBX asset loading, normalized framing, material setup, disposal and camera interaction.
-- `src/styles/global.css`: palette, typography, layout, responsive behavior and reduced motion.
+`media` and each of its members are optional. `SpecimenIllustration` contains a local public path, dimensions, alt text, attribution, source, rights, reconstruction note and generation provenance where applicable. A model has its own `ModelAsset` contract with an explicit format discriminator. The default page renders a plate and never mounts a viewer, even if a future record supplies model metadata.
 
-The archive and specimen page derive from the same `DinosaurProfile`; visual catalogue content is not separately hard-coded. `validateDinosaurRegistry` checks duplicate keys, ordered geologic age ranges and all section/evidence source references. Add a record in the registry and run tests to catch content relationship errors.
+The registry validates identity, duplicate IDs/slugs/archive codes, finite ordered ages, unique reference and section IDs, claim-source relationships, measurement values/units, and illustration metadata. Validation runs in the registry tests before publication; it is not a network source audit. Future content must keep sources accurate as well as structurally valid.
 
-## Rendering decisions
+## UI boundaries
 
-React 19, Vite 8 and TypeScript strict mode provide the frontend and development/build pipeline. Three.js, React Three Fiber and Drei are used because the specimen display needs genuine WebGL camera orbit, lights, mesh loading and ground contact. FBXLoader is used for the supplied FBX format; no conversion tooling was installed. The custom CSS system avoids adding a component library and keeps the sharp-edged exhibition visual identity in one tokenized stylesheet.
+- `SpecimenPlate`: image presentation, broken-image state and artwork-free fallback.
+- `MeasurementStrip`: available estimates and their source links.
+- `GeologicalTimeline`: contextual date range, adapting when a record falls outside the default Mesozoic display.
+- `SourceLinks`: numbered links into the current record's references.
+- `SpecimenPage`: reusable narrative composition, conditional sections, written range, evidence and media provenance.
+- `global.css`: current shared design and home/archive layouts.
+- `specimen.css`: scoped phase 1 field-journal prototype, motion tokens and reduced-motion override.
 
-The viewer caps device pixel ratio at 1.5, limits texture anisotropy to 8, uses a 1024 shadow map, and creates only one model scene on the detail route. Geometry, material and texture resources are disposed on unmount. The 3D model is not assigned a real-world size: bounds are normalized for visual framing only, and the overlay says scale is unspecified.
+The timeline presents an approximate interval, not precise fossil-site chronology. The comparison uses straight bars and explicitly compares body length with reference human height. The range is written content; no generic regional map is reused for unrelated taxa. Section navigation derives from existing sections.
 
-## Content and source flow
+## Public assets and legacy 3D
 
-Source IDs are embedded with profile sections and evidence notes; links point to source records in the same profile. Museum facts and published biomechanical interpretations are distinguished. Estimated measurements are ranges and annotated. Approximate era dates and illustrated fossil range avoid false site-level precision. See [scientific source policy](../content/scientific-sources.md).
+Vite uses `public/`. Only reviewed publication assets belong there. The generated T. rex WebP is 1536×1024 and approximately 121 kB. The local `models/` directory is no longer Vite's public directory, so its unverified binaries are not copied to production.
 
-## Resolved tradeoffs and current boundaries
+`SpecimenViewer.tsx` and `ViewerControls.tsx` remain as dormant legacy components. The viewer now accepts its model explicitly rather than requiring a model on every dinosaur profile. No active route imports it, so Three.js and the legacy FBX loader are absent from production chunks. Retaining dependencies is a deliberate reversible migration choice; future integration requires rights-cleared assets and separate viewer verification.
 
-- The supplied FBX is used directly. Inspection found no animation/skeleton tokens and no rig or clip documentation; the experience displays it as a static model. We do not synthesize articulated walking from an unverified asset.
-- Original model author, URL, license and measured scale were not supplied. The project code license excludes the model files; the asset register marks them unverified.
-- The index currently contains the T. rex record only. Triceratops and other taxa should be added only with separately verified content and media.
-- CSS illustrations are symbolic exhibition artwork, not fossil photographs or precise paleoart.
-- No performance measurement, accessibility audit or browser end-to-end run is claimed as completed.
+## Extension and rollout
+
+Home/archive editorial changes, the broader animation language, URL-persisted archive filters and route focus/scroll improvements belong to phase 2. A second sourced record belongs to phase 3. See `docs/design/archive-expansion-plan.md` and `docs/development/phase-1-review.md`. Avoid copying a page or introducing taxon-name branches when expanding content.

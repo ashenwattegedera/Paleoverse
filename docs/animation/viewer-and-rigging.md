@@ -1,4 +1,6 @@
-# Viewer and animation pipeline
+# Legacy viewer and future animation pipeline
+
+Status since phase 1 (2026-10-15): the active application renders illustrated records. The viewer code below is dormant; no route imports it, no model is required, and the local `models/` directory is no longer served or copied to production. This guide preserves the historical loader design and future rigging requirements; it does not describe the shipped page.
 
 ## Current asset status
 
