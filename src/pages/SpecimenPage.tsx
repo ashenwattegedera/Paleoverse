@@ -1,15 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowDown, ArrowRight, ArrowUpRight, Footprints, MapPin } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { getDinosaurBySlug } from '../data/registry';
 import { GeologicalTimeline } from '../components/GeologicalTimeline';
 import { MeasurementStrip } from '../components/MeasurementStrip';
 import { SourceLinks } from '../components/SourceLinks';
+import { Reveal } from '../components/Reveal';
 import { SpecimenPlate } from '../components/SpecimenPlate';
 import '../styles/specimen.css';
 
 export function SpecimenPage() {
   const { slug } = useParams();
+  const [referenceHeight, setReferenceHeight] = useState(1.75);
   const dinosaur = getDinosaurBySlug(slug ?? '');
   useEffect(() => {
     document.title = dinosaur
@@ -39,7 +41,6 @@ export function SpecimenPage() {
   const illustration = dinosaur.media?.illustration;
   const length = dinosaur.measurements.length;
   const comparisonLength = length?.unit === 'm' ? length.typicalValue : undefined;
-  const referenceHeight = 1.75;
   const comparisonMaximum = Math.max(comparisonLength ?? 0, referenceHeight);
   const firstSectionId = dinosaur.sections[0]?.id ?? 'geological-context';
 
@@ -121,19 +122,21 @@ export function SpecimenPage() {
       {dinosaur.sections.length > 0 && (
         <section className="journal-notes" aria-label="Cited field notes">
           {dinosaur.sections.map((section, index) => (
-            <section className="journal-note" id={section.id} key={section.id}>
-              <div className="journal-note-index">
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <small>{section.eyebrow.replace(/^\d+\s*\/\s*/, '')}</small>
-              </div>
-              <div className="journal-note-body">
-                <h2>{section.title}</h2>
-                {section.body.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-                <SourceLinks sources={section.sources} references={dinosaur.references} />
-              </div>
-            </section>
+            <Reveal key={section.id}>
+              <section className="journal-note" id={section.id}>
+                <div className="journal-note-index">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <small>{section.eyebrow.replace(/^\d+\s*\/\s*/, '')}</small>
+                </div>
+                <div className="journal-note-body">
+                  <h2>{section.title}</h2>
+                  {section.body.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                  <SourceLinks sources={section.sources} references={dinosaur.references} />
+                </div>
+              </section>
+            </Reveal>
           ))}
         </section>
       )}
@@ -210,6 +213,22 @@ export function SpecimenPage() {
               reference height; they do not measure the illustration.
             </p>
           </div>
+          <label className="comparison-control" htmlFor="reference-height">
+            <span>
+              Human reference height{' '}
+              <output htmlFor="reference-height">{referenceHeight.toFixed(2)} m</output>
+            </span>
+            <input
+              id="reference-height"
+              type="range"
+              min="0.5"
+              max="2.5"
+              step="0.05"
+              value={referenceHeight}
+              onChange={(event) => setReferenceHeight(Number(event.target.value))}
+            />
+            <small>Adjust an illustrative reference height to compare proportions.</small>
+          </label>
           <div className="scale-comparison">
             <div className="scale-row">
               <span className="scale-name">

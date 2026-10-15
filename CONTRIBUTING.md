@@ -22,3 +22,5 @@ Pull requests should explain user-visible behavior, show relevant test/build res
 ## Phased redesign review
 
 For each phase, make coherent Conventional Commits, run checks and prepare local review instructions. Pause for the user to run and inspect the phase before opening its PR or merging it. Apply feedback and rerun affected checks. After approval, publish the phase branch, create a PR with validation and limitations, and merge without rewriting unrelated history. Keep the logical commits visible in the PR. Do not start the next phase before this checkpoint is completed. See `docs/development/phase-1-review.md` for the first checklist.
+
+Include the PR title/body, branch/base and logical commit messages in each phase handoff. The shared PR template and phase-specific review documents keep the problem, implementation, validation and manual review traceable.

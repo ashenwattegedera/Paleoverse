@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as registry from '../data/registry';
@@ -85,6 +85,19 @@ describe('specimen record', () => {
     for (const link of document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) {
       expect(document.getElementById(link.hash.slice(1))).not.toBeNull();
     }
+  });
+
+  it('adjusts the illustrative human reference without changing the recorded dinosaur measurements', () => {
+    renderSpecimen('/specimens/tyrannosaurus-rex');
+    fireEvent.change(screen.getByRole('slider', { name: /Human reference height/ }), {
+      target: { value: '2' },
+    });
+    expect(document.querySelector('.comparison-control output')).toHaveTextContent('2.00 m');
+    expect(document.querySelector('.human-row .scale-value')).toHaveTextContent('2 m');
+    expect(screen.getByLabelText('Tyrannosaurus rex estimated measurements')).toHaveTextContent(
+      '≈ 12',
+    );
+    expect(tyrannosaurus.measurements.length?.typicalValue).toBe(12);
   });
 
   it('gives an explicit recovery path for unknown specimen routes', () => {

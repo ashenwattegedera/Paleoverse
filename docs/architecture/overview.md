@@ -27,8 +27,14 @@ The registry validates identity, duplicate IDs/slugs/archive codes, finite order
 - `GeologicalTimeline`: contextual date range, adapting when a record falls outside the default Mesozoic display.
 - `SourceLinks`: numbered links into the current record's references.
 - `SpecimenPage`: reusable narrative composition, conditional sections, written range, evidence and media provenance.
-- `global.css`: current shared design and home/archive layouts.
-- `specimen.css`: scoped phase 1 field-journal prototype, motion tokens and reduced-motion override.
+- `global.css`: reset, legacy viewer and specimen base styles. Superseded home/archive/shell rules have been removed.
+- `editorial.css`: shared shell, home/collection composition, artwork, motion tokens and reduced-motion behavior.
+- `specimen.css`: scoped specimen plate and reading layout, consuming shared motion tokens.
+- `Reveal`: once-only IntersectionObserver entrances, with visible content as the baseline.
+- `RouteFrame`: completed-route focus/hash handling and bounded session scroll restoration inside Suspense.
+- `useArchiveFilters` / `lib/archiveFilters`: URL-backed controls and pure parsing/serialization. Search replaces history; category/sort changes push history. Unsupported values fall back to defaults; unrelated parameters are preserved.
+- `DeepTimeExplorer`: native age slider and period buttons, filtering published catalog records by the selected age. Its empty state describes catalog coverage.
+- `RecordArtwork`: compact optional image/fallback shared by home and collection.
 
 The timeline presents an approximate interval, not precise fossil-site chronology. The comparison uses straight bars and explicitly compares body length with reference human height. The range is written content; no generic regional map is reused for unrelated taxa. Section navigation derives from existing sections.
 
@@ -40,4 +46,4 @@ Vite uses `public/`. Only reviewed publication assets belong there. The generate
 
 ## Extension and rollout
 
-Home/archive editorial changes, the broader animation language, URL-persisted archive filters and route focus/scroll improvements belong to phase 2. A second sourced record belongs to phase 3. See `docs/design/archive-expansion-plan.md` and `docs/development/phase-1-review.md`. Avoid copying a page or introducing taxon-name branches when expanding content.
+Phase 2 implements the editorial home/collection, shared motion, URL filters, navigation context and an adjustable illustrative comparison reference. It is awaiting manual review. A second sourced record belongs to phase 3. See `docs/design/archive-expansion-plan.md`, `docs/design/motion-system.md` and `docs/development/phase-2-review.md`. Avoid copying a page or introducing taxon-name branches when expanding content.

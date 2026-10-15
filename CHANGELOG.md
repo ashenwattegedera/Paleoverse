@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased — phase 1 / 2026-10-15
+## Unreleased — phase 2 / 2026-10-15
+
+- Extend the illustrated field-journal identity to home, collection and shared navigation.
+- Drive featured content, counts and links from the registry; retain optional artwork fallbacks.
+- Persist collection search/filters/sort in shareable URLs with browser history support.
+- Add shared purposeful motion, reduced-motion/no-observer fallbacks and accessible mobile navigation.
+- Add an interactive geological explorer and adjustable illustrative scale comparison.
+- Handle completed-route heading/hash focus, native anchors and session scroll restoration.
+- Remove obsolete page/shell CSS and document the motion system, verification and PR metadata.
+
+## Phase 1 — merged in PR #1 / 2026-10-15
 
 - Replace the mandatory 3D viewer with a field-journal specimen plate and optional illustration.
 - Add an AI-generated T. rex reconstruction with alt text, provenance and recorded prompt.
