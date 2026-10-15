@@ -1,176 +1,203 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, Search, SlidersHorizontal } from 'lucide-react';
+import { useEffect } from 'react';
+import { ArrowRight, ArrowUpRight, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { dinosaurs, searchDinosaurs } from '../data/registry';
+import { useArchiveFilters } from '../hooks/useArchiveFilters';
+import { RecordArtwork } from '../components/RecordArtwork';
+import { Reveal } from '../components/Reveal';
 
 export function ArchivePage() {
-  const [query, setQuery] = useState('');
-  const [diet, setDiet] = useState('all');
-  const [period, setPeriod] = useState('all');
-  const [group, setGroup] = useState('all');
-  const [sort, setSort] = useState<'asc' | 'desc'>('asc');
+  const { filters, updateFilters, clearFilters } = useArchiveFilters();
+  const { query, diet, period, group, sort } = filters;
   useEffect(() => {
-    document.title = 'The Archive — PALEOVERSE';
+    document.title = 'The Collection — PALEOVERSE';
   }, []);
-  const diets = useMemo(() => [...new Set(dinosaurs.map((dinosaur) => dinosaur.diet))].sort(), []);
-  const periods = useMemo(
-    () => [...new Set(dinosaurs.map((dinosaur) => dinosaur.period))].sort(),
-    [],
-  );
-  const groups = useMemo(
-    () => [...new Set(dinosaurs.map((dinosaur) => dinosaur.group))].sort(),
-    [],
-  );
-  const results = useMemo(
-    () => searchDinosaurs(query, diet, period, group, sort),
-    [query, diet, period, group, sort],
-  );
+  const categories = [
+    { key: 'diet', label: 'Diet', accessibleName: 'Filter by diet' },
+    { key: 'period', label: 'Period', accessibleName: 'Filter by geological period' },
+    { key: 'group', label: 'Group', accessibleName: 'Filter by dinosaur group' },
+  ] as const;
+  const results = searchDinosaurs(query, diet, period, group, sort);
+  const filtered =
+    query !== '' || diet !== 'all' || period !== 'all' || group !== 'all' || sort !== 'asc';
 
   return (
-    <div className="archive-page page-wrap">
-      <div className="page-topline">
-        <span>PALEOVERSE / FIELD ARCHIVE</span>
-        <span>COLLECTION INDEX &nbsp;·&nbsp; 01</span>
+    <div className="archive-index page-wrap">
+      <div className="frontispiece-topline">
+        <span>PALEOVERSE / THE COLLECTION</span>
+        <span>A CATALOG OF ANCIENT LIFE</span>
       </div>
-      <header className="archive-heading">
-        <div className="section-kicker">
-          <span>01</span> / SPECIMEN INDEX
+      <header className="catalog-heading">
+        <div>
+          <p className="editorial-kicker">THE FIELD ARCHIVE</p>
+          <h1>
+            Lives from
+            <br />
+            <i>another world.</i>
+          </h1>
+          <p>
+            Start with a name. Follow a curiosity. Every record brings together an animal, its
+            world, and the evidence that survives.
+          </p>
         </div>
-        <h1>
-          The <i>archive.</i>
-        </h1>
-        <p>Each record connects anatomy, geological context and the evidence that survives.</p>
+        <div className="catalog-count">
+          <span>{String(dinosaurs.length).padStart(2, '0')}</span>
+          <small>
+            SOURCED RECORD{dinosaurs.length === 1 ? '' : 'S'}
+            <br />
+            IN THE COLLECTION
+          </small>
+        </div>
       </header>
-      <div className="archive-search-row">
-        <label className="search-field">
-          <Search size={18} />
+      <form
+        className="catalog-tools"
+        role="search"
+        aria-label="Find specimens"
+        onSubmit={(event) => event.preventDefault()}
+      >
+        <label className="catalog-search">
+          <Search size={20} strokeWidth={1.5} aria-hidden="true" />
           <span className="sr-only">Search specimens</span>
           <input
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by name or group…"
+            onChange={(event) => updateFilters({ query: event.target.value }, true)}
+            placeholder="A name, a group, a curiosity…"
           />
         </label>
-        <label className="filter-field">
-          <SlidersHorizontal size={15} />
-          <span>DIET</span>
-          <select
-            aria-label="Filter by diet"
-            value={diet}
-            onChange={(event) => setDiet(event.target.value)}
-          >
-            <option value="all">ALL DIETS</option>
-            {diets.map((value) => (
-              <option value={value.toLowerCase()} key={value}>
-                {value.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="filter-field">
-          <span>PERIOD</span>
-          <select
-            aria-label="Filter by geological period"
-            value={period}
-            onChange={(event) => setPeriod(event.target.value)}
-          >
-            <option value="all">ALL PERIODS</option>
-            {periods.map((value) => (
-              <option value={value.toLowerCase()} key={value}>
-                {value.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="filter-field">
-          <span>GROUP</span>
-          <select
-            aria-label="Filter by dinosaur group"
-            value={group}
-            onChange={(event) => setGroup(event.target.value)}
-          >
-            <option value="all">ALL GROUPS</option>
-            {groups.map((value) => (
-              <option value={value.toLowerCase()} key={value}>
-                {value.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="filter-field">
-          <span>SORT</span>
-          <select
-            aria-label="Sort specimens alphabetically"
-            value={sort}
-            onChange={(event) => setSort(event.target.value as 'asc' | 'desc')}
-          >
-            <option value="asc">A—Z</option>
-            <option value="desc">Z—A</option>
-          </select>
-        </label>
-        <span className="results-count">
-          {String(results.length).padStart(2, '0')} RECORD{results.length === 1 ? '' : 'S'}
-        </span>
-      </div>
-      {results.length > 0 ? (
-        <div className="archive-list">
-          {results.map((dinosaur) => (
-            <Link className="archive-card" to={`/specimens/${dinosaur.slug}`} key={dinosaur.id}>
-              <div className="archive-card-art">
-                <div className="archive-card-ring" />
-                <div className="featured-dino-mark" />
-                <span>{dinosaur.archiveNumber}</span>
-              </div>
-              <div className="archive-card-content">
-                <div className="micro-label">
-                  {dinosaur.group} &nbsp;·&nbsp; {dinosaur.period.toUpperCase()}
-                </div>
-                <h2>
-                  {dinosaur.commonName.split(' ').slice(0, -1).join(' ')}{' '}
-                  <i>{dinosaur.commonName.split(' ').at(-1)}</i>
-                </h2>
-                <p>{dinosaur.summary}</p>
-                <div className="archive-tags">
-                  <span>{dinosaur.diet.toUpperCase()}</span>
-                  <span>{dinosaur.range.toUpperCase()}</span>
-                  <span>FOSSIL RECORD</span>
-                </div>
-              </div>
-              <div className="archive-card-measure">
-                <small>APPROX. LENGTH</small>
-                <b>
-                  {dinosaur.measurements.length
-                    ? `${dinosaur.measurements.length.displayValue} ${dinosaur.measurements.length.unit}`
-                    : 'Not established'}
-                </b>
-                <span>
-                  EXPLORE RECORD <ArrowRight size={14} />
-                </span>
-              </div>
-            </Link>
+        <div className="catalog-filters">
+          {categories.map(({ key, label, accessibleName }) => (
+            <label key={key}>
+              <span>{label}</span>
+              <select
+                aria-label={accessibleName}
+                value={filters[key]}
+                onChange={(event) => updateFilters({ [key]: event.target.value })}
+              >
+                <option value="all">
+                  All {label === 'Diet' ? 'diets' : label === 'Period' ? 'periods' : 'groups'}
+                </option>
+                {[...new Set(dinosaurs.map((record) => record[key]))].sort().map((value) => (
+                  <option key={value} value={value.toLowerCase()}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </label>
           ))}
+          <label>
+            <span>Order</span>
+            <select
+              aria-label="Sort specimens alphabetically"
+              value={sort}
+              onChange={(event) =>
+                updateFilters({ sort: event.target.value === 'desc' ? 'desc' : 'asc' })
+              }
+            >
+              <option value="asc">Name A–Z</option>
+              <option value="desc">Name Z–A</option>
+            </select>
+          </label>
         </div>
-      ) : (
-        <div className="empty-state">
-          <span>NO MATCHING SPECIMENS</span>
-          <p>Try another name, group or filter.</p>
-          <button
-            onClick={() => {
-              setQuery('');
-              setDiet('all');
-              setPeriod('all');
-              setGroup('all');
-              setSort('asc');
-            }}
-          >
-            CLEAR FILTERS
+      </form>
+      <div className="catalog-results-heading">
+        <p role="status" aria-live="polite" aria-atomic="true">
+          {results.length} record{results.length === 1 ? '' : 's'}{' '}
+          {filtered ? 'matching your selection' : 'ready to explore'}
+        </p>
+        {filtered && (
+          <button className="clear-selection" onClick={clearFilters}>
+            CLEAR FILTERS <span aria-hidden="true">×</span>
           </button>
-        </div>
-      )}
-      <div className="archive-endnote">
-        <span>END OF CURRENT COLLECTION</span>
-        <span>FUTURE SPECIMENS WILL BE ADDED AS SOURCED RECORDS</span>
+        )}
       </div>
+      <div key={JSON.stringify(filters)} className="catalog-results result-enter">
+        {results.length ? (
+          <div className={`catalog-grid ${results.length === 1 ? 'has-one-record' : ''}`}>
+            {results.map((record) => (
+              <article className="catalog-record" key={record.id}>
+                <Link
+                  className="catalog-record-art"
+                  to={`/specimens/${record.slug}`}
+                  aria-label={`Open the ${record.commonName} field record`}
+                >
+                  <div className="catalog-plate-label">
+                    <span>{record.archiveNumber}</span>
+                    <span>
+                      {record.media?.illustration
+                        ? 'ILLUSTRATED FIELD RECORD'
+                        : 'WRITTEN FIELD RECORD'}
+                    </span>
+                  </div>
+                  <RecordArtwork key={record.id} profile={record} />
+                  <span className="catalog-art-note">
+                    {record.media?.illustration
+                      ? 'RECONSTRUCTED APPEARANCE'
+                      : 'RESEARCH WITHOUT AN ILLUSTRATION'}
+                  </span>
+                </Link>
+                <div className="catalog-record-copy">
+                  <p className="editorial-kicker">
+                    {record.group} / {record.period}
+                  </p>
+                  <h2>
+                    <Link to={`/specimens/${record.slug}`}>{record.scientificName}</Link>
+                  </h2>
+                  <p>{record.summary}</p>
+                  <dl>
+                    <div>
+                      <dt>KNOWN FROM</dt>
+                      <dd>{record.range}</dd>
+                    </div>
+                    <div>
+                      <dt>APPROX. LENGTH</dt>
+                      <dd>
+                        {record.measurements.length
+                          ? `${record.measurements.length.displayValue} ${record.measurements.length.unit}`
+                          : 'Not established'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>DIET</dt>
+                      <dd>{record.diet}</dd>
+                    </div>
+                  </dl>
+                  <Link className="editorial-text-link" to={`/specimens/${record.slug}`}>
+                    EXPLORE RECORD <ArrowRight size={16} aria-hidden="true" />
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="catalog-empty">
+            <span>NO MATCHING SPECIMENS</span>
+            <h2>
+              A different trail,
+              <br />
+              <i>perhaps?</i>
+            </h2>
+            <p>Try another name, group or filter. The collection is still growing.</p>
+          </div>
+        )}
+      </div>
+      <Reveal>
+        <aside className="catalog-reading-note">
+          <span className="reading-note-mark" aria-hidden="true">
+            N.B.
+          </span>
+          <div>
+            <h2>A note on reading the archive.</h2>
+            <p>
+              Illustrations help us imagine a life. Fossils and research tell us what we can
+              support. Each record separates evidence, inference, and debate—and links back to its
+              sources.
+            </p>
+          </div>
+          <Link to="/#deep-time" className="editorial-text-link">
+            EXPLORE DEEP TIME <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
+        </aside>
+      </Reveal>
     </div>
   );
 }

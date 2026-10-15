@@ -3,8 +3,6 @@
   --paper: #f5efdf;
   --ink: #393b31;
   --ink-muted: #66695c;
-  --motion-fast: 160ms;
-  --motion-enter: 650ms;
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 }
 .journal-record .specimen-title-row {
